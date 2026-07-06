@@ -1,22 +1,143 @@
+import { Mail, Lock, Eye, Sparkles, ShieldCheck, Code2 } from "lucide-react";
+
 function Login() {
   return (
-    <div>
-      <h1>AI Code Review Assistant</h1>
+    <div className="min-h-screen bg-[#F5EFE6] flex">
 
-      <h2>Login</h2>
+      {/* Left Section */}
+      <div className="hidden lg:flex w-1/2 bg-[#E8DCCB] flex-col justify-center px-20">
 
-      <input type="email" placeholder="Enter your email" />
+        <div className="bg-white w-20 h-20 rounded-3xl flex items-center justify-center shadow-lg">
+          <Code2 size={40} className="text-[#8B5E3C]" />
+        </div>
 
-      <br />
-      <br />
+        <h1 className="text-6xl font-serif text-[#4B3425] mt-10 leading-tight">
+          Review Code
+          <br />
+          Smarter.
+        </h1>
 
-      <input type="password" placeholder="Enter your password" />
+        <p className="text-xl text-[#6D5B4D] mt-8 leading-9">
+          Improve your code quality using Artificial Intelligence.
+          Detect bugs, security issues, performance problems and
+          receive professional suggestions instantly.
+        </p>
 
-      <br />
-      <br />
+        <div className="mt-14 space-y-6">
 
-      <button>Login</button>
-      <p>Don't have an account? Sign Up</p>
+          <div className="flex items-center gap-4">
+            <Sparkles className="text-[#8B5E3C]" />
+            <span className="text-lg text-[#4B3425]">
+              AI Powered Code Reviews
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <ShieldCheck className="text-[#8B5E3C]" />
+            <span className="text-lg text-[#4B3425]">
+              Secure Authentication
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Code2 className="text-[#8B5E3C]" />
+            <span className="text-lg text-[#4B3425]">
+              Supports Multiple Languages
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* Right Section */}
+
+      <div className="flex-1 flex justify-center items-center px-6">
+
+        <div className="bg-white w-[430px] rounded-3xl shadow-2xl p-10">
+
+          <h2 className="text-4xl font-serif text-[#4B3425] text-center">
+            Welcome Back
+          </h2>
+
+          <p className="text-center text-gray-500 mt-3">
+            Login to continue
+          </p>
+
+          <div className="mt-10">
+
+            <label className="font-medium text-[#4B3425]">
+              Email
+            </label>
+
+            <div className="flex items-center border rounded-xl px-4 mt-2">
+
+              <Mail className="text-[#8B5E3C]" size={20} />
+
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full p-4 outline-none"
+              />
+
+            </div>
+
+          </div>
+
+          <div className="mt-6">
+
+            <label className="font-medium text-[#4B3425]">
+              Password
+            </label>
+
+            <div className="flex items-center border rounded-xl px-4 mt-2">
+
+              <Lock className="text-[#8B5E3C]" size={20} />
+
+              <input
+                type="password"
+                placeholder="Enter your password"
+                className="w-full p-4 outline-none"
+              />
+
+              <Eye
+                size={20}
+                className="cursor-pointer text-[#8B5E3C]"
+              />
+
+            </div>
+
+          </div>
+
+          <div className="flex justify-end mt-3">
+
+            <button className="text-[#8B5E3C] text-sm hover:underline">
+              Forgot Password?
+            </button>
+
+          </div>
+
+          <button className="w-full mt-8 bg-[#8B5E3C] text-white py-4 rounded-xl hover:bg-[#6F4527] transition">
+
+            Login
+
+          </button>
+
+          <p className="text-center mt-8 text-gray-500">
+
+            Don't have an account?
+
+            <span className="text-[#8B5E3C] font-semibold cursor-pointer">
+              {" "}
+              Sign Up
+            </span>
+
+          </p>
+
+        </div>
+
+      </div>
+
     </div>
   );
 }
