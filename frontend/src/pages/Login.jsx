@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Mail,
@@ -13,10 +13,42 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [backendMessage, setBackendMessage] = useState("");
 
-  const handleLogin = () => {
-    console.log("Email:", email);
-    console.log("Password:", password);
+  useEffect(() => {
+    fetch("http://localhost:5000/api/test")
+      .then((res) => res.json())
+      .then((data) => {
+        setBackendMessage(data.message);
+      })
+      .catch((err) => {
+        console.error(err);
+        setBackendMessage("Backend not connected");
+      });
+  }, []);
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      alert(data.message);
+
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+      alert("Backend connection failed");
+    }
   };
 
   return (
@@ -72,6 +104,11 @@ function Login() {
 
           <p className="text-center text-gray-500 mt-3">
             Login to continue
+          </p>
+
+          {/* Backend Status */}
+          <p className="text-center text-green-700 text-sm mt-2">
+            {backendMessage}
           </p>
 
           {/* Email */}
