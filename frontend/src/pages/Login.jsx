@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Mail,
   Lock,
@@ -15,36 +15,43 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [backendMessage, setBackendMessage] = useState("");
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetch("http://localhost:5000/api/test")
       .then((res) => res.json())
       .then((data) => {
         setBackendMessage(data.message);
       })
-      .catch((err) => {
-        console.error(err);
+      .catch((error) => {
+        console.error(error);
         setBackendMessage("Backend not connected");
       });
   }, []);
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
 
       const data = await response.json();
 
       alert(data.message);
 
-      console.log(data);
+      if (data.success) {
+        navigate("/dashboard");
+      }
     } catch (error) {
       console.error(error);
       alert("Backend connection failed");
@@ -74,6 +81,7 @@ function Login() {
         <div className="mt-14 space-y-6">
           <div className="flex items-center gap-4">
             <Sparkles className="text-[#8B5E3C]" />
+
             <span className="text-lg text-[#4B3425]">
               AI Powered Code Reviews
             </span>
@@ -81,6 +89,7 @@ function Login() {
 
           <div className="flex items-center gap-4">
             <ShieldCheck className="text-[#8B5E3C]" />
+
             <span className="text-lg text-[#4B3425]">
               Secure Authentication
             </span>
@@ -88,6 +97,7 @@ function Login() {
 
           <div className="flex items-center gap-4">
             <Code2 className="text-[#8B5E3C]" />
+
             <span className="text-lg text-[#4B3425]">
               Supports Multiple Languages
             </span>
@@ -106,14 +116,15 @@ function Login() {
             Login to continue
           </p>
 
-          {/* Backend Status */}
           <p className="text-center text-green-700 text-sm mt-2">
             {backendMessage}
           </p>
 
           {/* Email */}
           <div className="mt-10">
-            <label className="font-medium text-[#4B3425]">Email</label>
+            <label className="font-medium text-[#4B3425]">
+              Email
+            </label>
 
             <div className="flex items-center border rounded-xl px-4 mt-2">
               <Mail className="text-[#8B5E3C]" size={20} />
@@ -130,7 +141,9 @@ function Login() {
 
           {/* Password */}
           <div className="mt-6">
-            <label className="font-medium text-[#4B3425]">Password</label>
+            <label className="font-medium text-[#4B3425]">
+              Password
+            </label>
 
             <div className="flex items-center border rounded-xl px-4 mt-2">
               <Lock className="text-[#8B5E3C]" size={20} />
@@ -166,6 +179,7 @@ function Login() {
 
           <p className="text-center mt-8 text-gray-500">
             Don't have an account?{" "}
+
             <Link
               to="/signup"
               className="text-[#8B5E3C] font-semibold hover:underline"
