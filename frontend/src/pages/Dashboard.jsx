@@ -5,6 +5,7 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   return (
@@ -39,6 +40,8 @@ function Dashboard() {
 
         {/* Cards */}
         <div className="grid md:grid-cols-3 gap-7 mt-12">
+
+          {/* Code Review Card */}
           <div className="bg-white rounded-3xl p-7 shadow-lg">
             <div className="w-14 h-14 bg-[#E8DCCB] rounded-2xl flex items-center justify-center">
               <FileCode2
@@ -55,11 +58,14 @@ function Dashboard() {
               Submit your code and receive AI-powered suggestions.
             </p>
 
-            <button className="mt-7 bg-[#8B5E3C] text-white px-5 py-3 rounded-xl hover:bg-[#6F4527]">
-              Review Code
-            </button>
+            <Link to="/review">
+              <button className="mt-7 bg-[#8B5E3C] text-white px-5 py-3 rounded-xl hover:bg-[#6F4527] w-full">
+                Review Code
+              </button>
+            </Link>
           </div>
 
+          {/* History Card */}
           <div className="bg-white rounded-3xl p-7 shadow-lg">
             <div className="w-14 h-14 bg-[#E8DCCB] rounded-2xl flex items-center justify-center">
               <History
@@ -76,11 +82,12 @@ function Dashboard() {
               View your previously submitted code reviews.
             </p>
 
-            <button className="mt-7 border border-[#8B5E3C] text-[#8B5E3C] px-5 py-3 rounded-xl hover:bg-[#F5EFE6]">
+            <button className="mt-7 border border-[#8B5E3C] text-[#8B5E3C] px-5 py-3 rounded-xl hover:bg-[#F5EFE6] w-full">
               View History
             </button>
           </div>
 
+          {/* AI Suggestions Card */}
           <div className="bg-white rounded-3xl p-7 shadow-lg">
             <div className="w-14 h-14 bg-[#E8DCCB] rounded-2xl flex items-center justify-center">
               <Sparkles
@@ -97,10 +104,11 @@ function Dashboard() {
               Get intelligent suggestions for cleaner and safer code.
             </p>
 
-            <button className="mt-7 border border-[#8B5E3C] text-[#8B5E3C] px-5 py-3 rounded-xl hover:bg-[#F5EFE6]">
+            <button className="mt-7 border border-[#8B5E3C] text-[#8B5E3C] px-5 py-3 rounded-xl hover:bg-[#F5EFE6] w-full">
               Explore
             </button>
           </div>
+
         </div>
       </main>
     </div>
