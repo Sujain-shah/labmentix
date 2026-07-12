@@ -1,8 +1,10 @@
-import pool from "./config/db.js";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+
+import pool from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 
 dotenv.config();
 
@@ -22,11 +24,19 @@ app.get("/api/test", (req, res) => {
 // Auth Routes
 app.use("/api/auth", authRoutes);
 
-const PORT = process.env.PORT || 5000;
+// Review Routes
+app.use("/api/review", reviewRoutes);
+
+// Database Connection
 pool
   .connect()
   .then(() => console.log("Database connected successfully"))
-  .catch((error) => console.error("Database connection failed:", error.message));
+  .catch((error) =>
+    console.error("Database connection failed:", error.message)
+  );
+
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
