@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import pool from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use("/api/auth", authRoutes);
 
 // Review Routes
 app.use("/api/review", reviewRoutes);
+app.use("/api/ai", aiRoutes);
 
 // Database Connection
 pool

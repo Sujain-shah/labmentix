@@ -7,6 +7,9 @@ function CodeReview() {
     const [language, setLanguage] = useState("JavaScript");
     const [code, setCode] = useState("");
     const [suggestions, setSuggestions] = useState([]);
+    const [metrics, setMetrics] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [aiReview, setAiReview] = useState("");
 
     const handleReview = async () => {
         if (!code.trim()) {
@@ -15,6 +18,7 @@ function CodeReview() {
         }
 
         try {
+            // Static Analysis
             const response = await fetch("http://localhost:5000/api/review", {
                 method: "POST",
                 headers: {
@@ -30,12 +34,78 @@ function CodeReview() {
 
             if (data.success) {
                 setSuggestions(data.suggestions);
+                setMetrics(data.metrics);
+            }
+
+            // AI Review
+            const aiResponse = await fetch("http://localhost:5000/api/ai", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    language,
+                    code,
+                }),
+            });
+
+            const aiData = await aiResponse.json();
+
+            if (aiData.success) {
+                setAiReview(aiData.review);
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Backend connection failed");
+        }
+    };
+    const handleFileUpload = async () => {
+        if (!selectedFile) {
+            alert("Please select a file.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("codeFile", selectedFile);
+
+        try {
+            const response = await fetch(
+                "http://localhost:5000/api/review/upload",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+
+            const data = await response.json();
+
+            if (data.success) {
+                setSuggestions(data.suggestions);
+
+                // AI Review
+                const aiResponse = await fetch("http://localhost:5000/api/ai", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        language,
+                        code,
+                    }),
+                });
+
+                const aiData = await aiResponse.json();
+
+                if (aiData.success) {
+                    alert(aiData.review);
+                }
             } else {
                 alert(data.message);
             }
         } catch (error) {
             console.error(error);
-            alert("Backend connection failed");
+            alert("File upload failed");
         }
     };
 
@@ -105,12 +175,32 @@ function CodeReview() {
                             automaticLayout: true,
                         }}
                     />
+
+                </div>
+                <div className="mt-6">
+                    <label className="font-semibold text-[#4B3425]">
+                        Upload Code File
+                    </label>
+
+                    <input
+                        type="file"
+                        className="block mt-3"
+                        onChange={(e) => setSelectedFile(e.target.files[0])}
+                    />
+
+                    <button
+                        onClick={handleFileUpload}
+                        className="mt-4 bg-green-700 text-white px-6 py-3 rounded-xl hover:bg-green-800"
+                    >
+                        Upload File
+                    </button>
                 </div>
 
                 <button
                     onClick={handleReview}
                     className="mt-8 bg-[#8B5E3C] text-white px-8 py-4 rounded-xl hover:bg-[#6F4527]"
                 >
+
                     Review Code
                 </button>
 
@@ -119,6 +209,35 @@ function CodeReview() {
                     <h3 className="text-2xl font-semibold text-[#4B3425]">
                         Review Result
                     </h3>
+                    {metrics && (
+                        <div className="grid grid-cols-3 gap-4 mt-6 mb-6">
+                            <div className="bg-[#F5EFE6] p-4 rounded-xl text-center">
+                                <h4 className="font-bold">Lines</h4>
+                                <p>{metrics.linesOfCode}</p>
+                            </div>
+
+                            <div className="bg-[#F5EFE6] p-4 rounded-xl text-center">
+                                <h4 className="font-bold">Functions</h4>
+                                <p>{metrics.functions}</p>
+                            </div>
+
+                            <div className="bg-[#F5EFE6] p-4 rounded-xl text-center">
+                                <h4 className="font-bold">Classes</h4>
+                                <p>{metrics.classes}</p>
+                            </div>
+                        </div>
+                    )}
+                    {aiReview && (
+                        <div className="bg-[#FFF8F0] border rounded-xl p-5 mt-6 mb-6">
+                            <h3 className="text-xl font-bold text-[#4B3425] mb-3">
+                                🤖 AI Review
+                            </h3>
+
+                            <pre className="whitespace-pre-wrap text-sm">
+                                {aiReview}
+                            </pre>
+                        </div>
+                    )}
 
                     {suggestions.length === 0 ? (
                         <p className="text-gray-500 mt-4">

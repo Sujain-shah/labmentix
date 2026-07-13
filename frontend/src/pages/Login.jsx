@@ -50,6 +50,7 @@ function Login() {
       alert(data.message);
 
       if (data.success) {
+        localStorage.setItem("user", JSON.stringify(data.user));
         navigate("/dashboard");
       }
     } catch (error) {
@@ -165,9 +166,12 @@ function Login() {
           </div>
 
           <div className="flex justify-end mt-3">
-            <button className="text-[#8B5E3C] text-sm hover:underline">
+            <Link
+              to="/forgot-password"
+              className="text-[#8B5E3C] text-sm hover:underline"
+            >
               Forgot Password?
-            </button>
+            </Link>
           </div>
 
           <button

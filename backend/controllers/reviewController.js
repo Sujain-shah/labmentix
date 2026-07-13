@@ -1,3 +1,39 @@
+import fs from "fs";
+import pool from "../config/db.js";
+
+// Common Static Analysis Function
+const analyzeCode = (code) => {
+  let suggestions = [];
+
+  if (code.includes("var ")) {
+    suggestions.push("Avoid using 'var'. Use 'let' or 'const' instead.");
+  }
+
+  if (code.includes("console.log")) {
+    suggestions.push("Remove console.log statements before production.");
+  }
+
+  if (code.length < 20) {
+    suggestions.push("Code is too short for meaningful analysis.");
+  }
+
+  if (suggestions.length === 0) {
+    suggestions.push("No obvious issues found. Great job!");
+  }
+  const metrics = {
+    linesOfCode: code.split("\n").length,
+    functions:
+      (code.match(/function\s+\w+/g) || []).length +
+      (code.match(/=>/g) || []).length,
+    classes: (code.match(/class\s+\w+/g) || []).length,
+  };
+  return {
+    suggestions,
+    metrics,
+  };
+};
+
+// Review pasted code
 export const reviewCode = async (req, res) => {
   try {
     const { language, code } = req.body;
@@ -9,45 +45,104 @@ export const reviewCode = async (req, res) => {
       });
     }
 
-    let suggestions = [];
-
-    // Basic Static Analysis
-    if (code.includes("var ")) {
-      suggestions.push(
-        "Avoid using 'var'. Use 'let' or 'const' instead."
-      );
-    }
-
-    if (code.includes("console.log")) {
-      suggestions.push(
-        "Remove console.log statements before production."
-      );
-    }
-
-    if (code.length < 20) {
-      suggestions.push(
-        "Code is too short for meaningful analysis."
-      );
-    }
-
-    if (suggestions.length === 0) {
-      suggestions.push(
-        "No obvious issues found. Great job!"
-      );
-    }
+    const analysis = analyzeCode(code);
+    await pool.query(
+      `INSERT INTO reviews (language, code, suggestions)
+   VALUES ($1, $2, $3)`,
+      [
+        language,
+        code,
+        JSON.stringify(analysis.suggestions),
+      ]
+    );
 
     return res.json({
       success: true,
       language,
-      suggestions,
+      suggestions: analysis.suggestions,
+      metrics: analysis.metrics,
     });
-
   } catch (error) {
     console.error(error);
 
     return res.status(500).json({
       success: false,
       message: "Server Error",
+    });
+  }
+};
+
+// Review uploaded file
+export const reviewUploadedFile = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded",
+      });
+    }
+
+    const code = fs.readFileSync(req.file.path, "utf8");
+
+    const analysis = analyzeCode(code);
+
+    // Delete uploaded file after reading
+    fs.unlinkSync(req.file.path);
+
+    return res.json({
+      success: true,
+      file: req.file.originalname,
+      suggestions: analysis.suggestions,
+      metrics: analysis.metrics,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "File review failed",
+    });
+  }
+};
+export const getReviewHistory = async (req, res) => {
+  try {
+    const reviews = await pool.query(
+      "SELECT * FROM reviews ORDER BY created_at DESC"
+    );
+
+    return res.json({
+      success: true,
+      reviews: reviews.rows,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch review history",
+    });
+  }
+};
+
+export const deleteReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await pool.query(
+      "DELETE FROM reviews WHERE id = $1",
+      [id]
+    );
+
+    return res.json({
+      success: true,
+      message: "Review deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Delete failed",
     });
   }
 };

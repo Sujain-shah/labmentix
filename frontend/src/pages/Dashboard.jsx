@@ -5,9 +5,17 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Dashboard() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    navigate("/login");
+  };
   return (
     <div className="min-h-screen bg-[#F5EFE6]">
       {/* Navbar */}
@@ -20,7 +28,10 @@ function Dashboard() {
           </h1>
         </div>
 
-        <button className="flex items-center gap-2 hover:text-[#E8DCCB]">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 hover:text-[#E8DCCB]"
+        >
           <LogOut size={20} />
           Logout
         </button>
@@ -82,9 +93,12 @@ function Dashboard() {
               View your previously submitted code reviews.
             </p>
 
-            <button className="mt-7 border border-[#8B5E3C] text-[#8B5E3C] px-5 py-3 rounded-xl hover:bg-[#F5EFE6] w-full">
+            <Link
+              to="/history"
+              className="inline-block mt-7 border border-[#8B5E3C] text-[#8B5E3C] px-5 py-3 rounded-xl hover:bg-[#F5EFE6]"
+            >
               View History
-            </button>
+            </Link>
           </div>
 
           {/* AI Suggestions Card */}
@@ -108,7 +122,29 @@ function Dashboard() {
               Explore
             </button>
           </div>
+          {/* Profile Card */}
+          <div className="bg-white rounded-3xl p-7 shadow-lg">
+            <div className="w-14 h-14 bg-[#E8DCCB] rounded-2xl flex items-center justify-center">
+              <Code2
+                size={28}
+                className="text-[#8B5E3C]"
+              />
+            </div>
 
+            <h3 className="text-xl font-semibold text-[#4B3425] mt-6">
+              My Profile
+            </h3>
+
+            <p className="text-gray-500 mt-3">
+              View your account information.
+            </p>
+
+            <Link to="/profile">
+              <button className="mt-7 bg-[#8B5E3C] text-white px-5 py-3 rounded-xl hover:bg-[#6F4527] w-full">
+                View Profile
+              </button>
+            </Link>
+          </div>
         </div>
       </main>
     </div>
