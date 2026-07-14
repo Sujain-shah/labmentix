@@ -10,7 +10,7 @@ function ResetPassword() {
 
     try {
       const response = await fetch(
-        "http://https://labmentix.onrender.com/api/auth/reset-password",
+        "https://labmentix.onrender.com/api/auth/reset-password",
         {
           method: "POST",
           headers: {

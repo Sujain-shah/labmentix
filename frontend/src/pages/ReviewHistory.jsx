@@ -8,7 +8,7 @@ function ReviewHistory() {
     const deleteReview = async (id) => {
         try {
             const response = await fetch(
-                `http://https://labmentix.onrender.com/api/review/${id}`,
+                `https://labmentix.onrender.com/api/review/${id}`,
                 {
                     method: "DELETE",
                 }
@@ -26,7 +26,7 @@ function ReviewHistory() {
     };
 
     useEffect(() => {
-        fetch("http://https://labmentix.onrender.com/api/review/history")
+        fetch("https://labmentix.onrender.com/api/review/history")
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) {

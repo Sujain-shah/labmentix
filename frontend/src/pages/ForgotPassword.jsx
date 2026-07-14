@@ -13,7 +13,7 @@ function ForgotPassword() {
 
         try {
             const response = await fetch(
-                "http://https://labmentix.onrender.com/api/auth/forgot-password",
+                "https://labmentix.onrender.com/api/auth/forgot-password",
                 {
                     method: "POST",
                     headers: {
