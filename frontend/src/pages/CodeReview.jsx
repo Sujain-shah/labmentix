@@ -19,7 +19,7 @@ function CodeReview() {
 
         try {
             // Static Analysis
-            const response = await fetch("http://localhost:5000/api/review", {
+            const response = await fetch("http://https://labmentix.onrender.com/api/review", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -38,7 +38,7 @@ function CodeReview() {
             }
 
             // AI Review
-            const aiResponse = await fetch("http://localhost:5000/api/ai", {
+            const aiResponse = await fetch("http://https://labmentix.onrender.com/api/ai", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -71,7 +71,7 @@ function CodeReview() {
 
         try {
             const response = await fetch(
-                "http://localhost:5000/api/review/upload",
+                "http://https://labmentix.onrender.com/api/review/upload",
                 {
                     method: "POST",
                     body: formData,
@@ -84,7 +84,7 @@ function CodeReview() {
                 setSuggestions(data.suggestions);
 
                 // AI Review
-                const aiResponse = await fetch("http://localhost:5000/api/ai", {
+                const aiResponse = await fetch("http://https://labmentix.onrender.com/api/ai", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

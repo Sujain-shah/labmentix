@@ -12,7 +12,7 @@ function Signup() {
   const handleSignup = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/signup",
+        "http://https://labmentix.onrender.com/api/auth/signup",
         {
           method: "POST",
           headers: {

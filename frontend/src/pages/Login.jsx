@@ -18,7 +18,7 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/test")
+    fetch("http://https://labmentix.onrender.com/api/test")
       .then((res) => res.json())
       .then((data) => {
         setBackendMessage(data.message);
@@ -32,7 +32,7 @@ function Login() {
   const handleLogin = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/login",
+        "http://https://labmentix.onrender.com/api/auth/login",
         {
           method: "POST",
           headers: {
