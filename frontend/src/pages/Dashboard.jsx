@@ -118,9 +118,11 @@ function Dashboard() {
               Get intelligent suggestions for cleaner and safer code.
             </p>
 
-            <button className="mt-7 border border-[#8B5E3C] text-[#8B5E3C] px-5 py-3 rounded-xl hover:bg-[#F5EFE6] w-full">
-              Explore
-            </button>
+            <Link to="/review">
+              <button className="mt-7 border border-[#8B5E3C] text-[#8B5E3C] px-5 py-3 rounded-xl hover:bg-[#F5EFE6] w-full">
+                Explore
+              </button>
+            </Link>
           </div>
           {/* Profile Card */}
           <div className="bg-white rounded-3xl p-7 shadow-lg">
