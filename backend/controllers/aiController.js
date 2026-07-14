@@ -1,8 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
-
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
+import axios from "axios";
 
 export const aiReview = async (req, res) => {
   try {
@@ -16,50 +12,54 @@ export const aiReview = async (req, res) => {
     }
 
     const prompt = `
-You are an expert Senior Software Engineer.
+You are a Senior Software Engineer.
 
-Analyze this ${language} code.
+Review the following ${language} code.
 
-Return your response in this format:
+Return your response in Markdown.
+
+Include:
 
 ## Bugs
-- ...
-
 ## Performance Improvements
-- ...
-
 ## Security Issues
-- ...
-
 ## Best Practices
-- ...
-
 ## Refactoring Suggestions
-- ...
-
-## Documentation
-- Explain what the code does.
-- Explain each function.
-- Explain each class.
-- Mention inputs and outputs.
-- Give a short example.
+## Code Explanation
 
 Code:
 ${code}
 `;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: prompt,
-    });
+    const response = await axios.post(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        // model: "openrouter/free",
+        model: "cohere/north-mini-code:free",
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return res.json({
       success: true,
-      review: response.text,
+      review: response.data.choices[0].message.content,
     });
 
   } catch (error) {
-    console.error(error);
+    console.error(
+      error.response?.data || error.message
+    );
 
     return res.status(500).json({
       success: false,

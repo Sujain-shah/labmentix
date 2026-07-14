@@ -1,55 +1,103 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function Profile() {
-  const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null);
+    const [name, setName] = useState("");
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    useEffect(() => {
+        const email = localStorage.getItem("userEmail") || "";
 
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+        fetch(`http://localhost:5000/api/auth/profile?email=${email}`)
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    ssetUser(data.user);
+                    setName(data.user.name);
+                }
+            })
+            .catch(console.error);
+    }, []);
+
+    if (!user) {
+        return (
+            <div className="min-h-screen flex justify-center items-center">
+                Loading...
+            </div>
+        );
     }
-  }, []);
 
-  if (!user) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
-        No user found
-      </div>
+        <div className="min-h-screen bg-[#F5EFE6] flex justify-center items-center">
+            <div className="bg-white p-10 rounded-3xl shadow-xl w-[450px]">
+                <h2 className="text-3xl font-serif text-[#4B3425] text-center">
+                    My Profile
+                </h2>
+
+                <div className="mt-8 space-y-5">
+                    <div>
+                        <p className="font-semibold">Name</p>
+                        <input
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full border p-3 rounded-xl mt-2"
+                        />
+                    </div>
+
+                    <div>
+                        <p className="font-semibold">Email</p>
+                        <input
+                            value={user.email}
+                            readOnly
+                            className="w-full border p-3 rounded-xl mt-2"
+                        />
+                    </div>
+
+                    <div>
+                        <p className="font-semibold">Joined</p>
+                        <input
+                            value={user.created_at}
+                            readOnly
+                            className="w-full border p-3 rounded-xl mt-2"
+                        />
+                    </div>
+                </div>
+                <button
+                    onClick={async () => {
+                        const response = await fetch(
+                            "http://localhost:5000/api/auth/profile",
+                            {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    email: user.email,
+                                    name,
+                                }),
+                            }
+                        );
+
+                        const data = await response.json();
+                        alert(data.message);
+
+                        if (data.success) {
+                            localStorage.setItem("userName", name);
+                        }
+                    }}
+                    className="w-full mt-6 bg-[#8B5E3C] text-white py-3 rounded-xl"
+                >
+                    Update Profile
+                </button>
+
+                <Link to="/dashboard">
+                    <button className="w-full mt-8 bg-[#8B5E3C] text-white py-3 rounded-xl">
+                        Back
+                    </button>
+                </Link>
+            </div>
+        </div>
     );
-  }
-
-  return (
-    <div className="min-h-screen bg-[#F5EFE6] flex justify-center items-center">
-      <div className="bg-white p-10 rounded-3xl shadow-xl w-[450px]">
-        <h1 className="text-3xl font-serif text-[#4B3425] text-center">
-          My Profile
-        </h1>
-
-        <div className="mt-8">
-          <label className="font-semibold">Name</label>
-
-          <input
-            type="text"
-            value={user.name}
-            readOnly
-            className="w-full border p-4 rounded-xl mt-2 bg-gray-100"
-          />
-        </div>
-
-        <div className="mt-5">
-          <label className="font-semibold">Email</label>
-
-          <input
-            type="email"
-            value={user.email}
-            readOnly
-            className="w-full border p-4 rounded-xl mt-2 bg-gray-100"
-          />
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export default Profile;

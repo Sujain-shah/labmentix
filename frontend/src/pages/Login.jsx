@@ -51,6 +51,8 @@ function Login() {
 
       if (data.success) {
         localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("userEmail", data.user.email);
+        localStorage.setItem("userName", data.user.name);
         navigate("/dashboard");
       }
     } catch (error) {

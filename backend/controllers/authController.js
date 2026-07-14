@@ -163,3 +163,55 @@ export const resetPassword = async (req, res) => {
     });
   }
 };
+// Get Profile
+export const getProfile = async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    const user = await pool.query(
+      "SELECT id, name, email, created_at FROM users WHERE email = $1",
+      [email]
+    );
+
+    if (user.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.json({
+      success: true,
+      user: user.rows[0],
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+export const updateProfile = async (req, res) => {
+  try {
+    const { email, name } = req.body;
+
+    await pool.query(
+      "UPDATE users SET name = $1 WHERE email = $2",
+      [name, email]
+    );
+
+    return res.json({
+      success: true,
+      message: "Profile updated successfully",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
