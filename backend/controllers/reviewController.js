@@ -48,7 +48,7 @@ export const reviewCode = async (req, res) => {
     const analysis = analyzeCode(code);
     await pool.query(
       `INSERT INTO reviews (language, code, suggestions, email)
-   VALUES ($1, $2, $3, $4)`,
+      VALUES ($1, $2, $3, $4)`,
       [
         language,
         code,
