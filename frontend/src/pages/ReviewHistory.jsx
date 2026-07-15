@@ -11,6 +11,12 @@ function ReviewHistory() {
                 `https://labmentix.onrender.com/api/review/${id}`,
                 {
                     method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: localStorage.getItem("userEmail"),
+                    }),
                 }
             );
 
@@ -26,7 +32,11 @@ function ReviewHistory() {
     };
 
     useEffect(() => {
-        fetch("https://labmentix.onrender.com/api/review/history")
+        const email = localStorage.getItem("userEmail");
+
+        fetch(
+            `https://labmentix.onrender.com/api/review/history?email=${email}`
+        )
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) {

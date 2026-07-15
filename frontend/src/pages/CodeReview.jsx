@@ -27,6 +27,7 @@ function CodeReview() {
                 body: JSON.stringify({
                     language,
                     code,
+                    email: localStorage.getItem("userEmail"),
                 }),
             });
 

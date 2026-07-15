@@ -36,7 +36,7 @@ const analyzeCode = (code) => {
 // Review pasted code
 export const reviewCode = async (req, res) => {
   try {
-    const { language, code } = req.body;
+    const { language, code, email } = req.body;
 
     if (!language || !code) {
       return res.status(400).json({
@@ -47,12 +47,13 @@ export const reviewCode = async (req, res) => {
 
     const analysis = analyzeCode(code);
     await pool.query(
-      `INSERT INTO reviews (language, code, suggestions)
-   VALUES ($1, $2, $3)`,
+      `INSERT INTO reviews (language, code, suggestions, email)
+   VALUES ($1, $2, $3, $4)`,
       [
         language,
         code,
         JSON.stringify(analysis.suggestions),
+        email,
       ]
     );
 
@@ -106,8 +107,11 @@ export const reviewUploadedFile = async (req, res) => {
 };
 export const getReviewHistory = async (req, res) => {
   try {
+    const { email } = req.query;
+
     const reviews = await pool.query(
-      "SELECT * FROM reviews ORDER BY created_at DESC"
+      "SELECT * FROM reviews WHERE email = $1 ORDER BY created_at DESC",
+      [email]
     );
 
     return res.json({
@@ -127,10 +131,11 @@ export const getReviewHistory = async (req, res) => {
 export const deleteReview = async (req, res) => {
   try {
     const { id } = req.params;
+    const { email } = req.body;
 
     await pool.query(
-      "DELETE FROM reviews WHERE id = $1",
-      [id]
+      "DELETE FROM reviews WHERE id = $1 AND email = $2",
+      [id, email]
     );
 
     return res.json({
