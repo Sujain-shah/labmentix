@@ -36,19 +36,16 @@ const analyzeCode = (code) => {
 // Review pasted code
 export const reviewCode = async (req, res) => {
   try {
+    console.log("BODY:", req.body);
+
     const { language, code, email } = req.body;
 
-    if (!language || !code) {
-      return res.status(400).json({
-        success: false,
-        message: "Language and code are required",
-      });
-    }
-
     const analysis = analyzeCode(code);
-    await pool.query(
+
+    const result = await pool.query(
       `INSERT INTO reviews (language, code, suggestions, email)
-      VALUES ($1, $2, $3, $4)`,
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
       [
         language,
         code,
@@ -57,21 +54,23 @@ export const reviewCode = async (req, res) => {
       ]
     );
 
+    console.log("Inserted:", result.rows[0]);
+
     return res.json({
       success: true,
-      language,
       suggestions: analysis.suggestions,
       metrics: analysis.metrics,
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("INSERT ERROR:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: error.message,
     });
   }
-};
+}
 
 // Review uploaded file
 export const reviewUploadedFile = async (req, res) => {

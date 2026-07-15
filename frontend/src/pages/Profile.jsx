@@ -8,11 +8,11 @@ function Profile() {
     useEffect(() => {
         const email = localStorage.getItem("userEmail") || "";
 
-        fetch(`http://localhost:5000/api/auth/profile?email=${email}`)
+        fetch(`https://labmentix.onrender.com/api/auth/profile?email=${email}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) {
-                    ssetUser(data.user);
+                    setUser(data.user);
                     setName(data.user.name);
                 }
             })
@@ -65,7 +65,7 @@ function Profile() {
                 <button
                     onClick={async () => {
                         const response = await fetch(
-                            "http://localhost:5000/api/auth/profile",
+                            "https://labmentix.onrender.com/api/auth/profile",
                             {
                                 method: "PUT",
                                 headers: {

@@ -18,6 +18,7 @@ router.post("/reset-password", resetPassword);
 // Login API
 router.post("/login", login);
 
-export default router;
 router.get("/profile", getProfile);
 router.put("/profile", updateProfile);
+
+export default router;
