@@ -32,6 +32,8 @@ function CodeReview() {
             });
 
             const data = await response.json();
+            console.log("Static Response:", data);
+            alert(JSON.stringify(data));
 
             if (data.success) {
                 setSuggestions(data.suggestions);
