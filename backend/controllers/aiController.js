@@ -39,7 +39,6 @@ ${code}
       "https://openrouter.ai/api/v1/chat/completions",
       {
         model: "cohere/north-mini-code:free",
-        console.log(response.data);
         messages: [
           {
             role: "user",
@@ -56,6 +55,7 @@ ${code}
         },
       }
     );
+    console.log(response.data);
 
     console.log("OPENROUTER RESPONSE:");
     console.log(JSON.stringify(response.data, null, 2));
