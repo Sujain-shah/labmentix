@@ -242,7 +242,7 @@ function CodeReview() {
 
                     {suggestions.length === 0 ? (
                         <p className="text-gray-500 mt-4">
-                            Your AI review will appear here.
+                            No static analysis suggestions available.
                         </p>
                     ) : (
                         <ul className="mt-5 space-y-3">
