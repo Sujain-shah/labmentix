@@ -13,12 +13,18 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Labmentix Backend API is running ",
+  });
+});
 
 // Test API
 app.get("/api/test", (req, res) => {
   res.json({
     success: true,
-    message: "Hello from Backend 🚀",
+    message: "Hello from Backend ",
   });
 });
 
